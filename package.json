@@ -1,0 +1,22 @@
+{
+  "name": "playwright_automationexercise",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josafagonzaga/Playwright_automationexercise.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josafagonzaga/Playwright_automationexercise/issues"
+  },
+  "homepage": "https://github.com/josafagonzaga/Playwright_automationexercise#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0"
+  }
+}
