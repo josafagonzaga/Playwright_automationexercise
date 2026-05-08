@@ -49,7 +49,7 @@ test.describe('Automation Exercise - Cadastro de Usuário', () => {
     await page.getByTestId('years').selectOption('1979');
     
 
-
+//teste
 
 
   });
