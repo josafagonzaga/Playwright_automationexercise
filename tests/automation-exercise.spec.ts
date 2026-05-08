@@ -47,7 +47,8 @@ test.describe('Automation Exercise - Cadastro de Usuário', () => {
     await page.getByTestId('days').selectOption('28');
     await page.getByTestId('months').selectOption('5');
     await page.getByTestId('years').selectOption('1979');
-    //teste
+    
+
 
 
 
