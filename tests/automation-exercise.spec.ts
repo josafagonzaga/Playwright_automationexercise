@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { gerarUsuarioTeste } from './utils/gerar-usuario-teste';
+import { deletarUsuario } from './utils/deletar-usuario';
 
 test.describe('Automation Exercise - Cadastro de Usuário', () => {
   test('deve preencher nome e email no início do cadastro', async ({ page }) => {
-    const identificadorUnico = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
-    const usuario = `Usuario Teste ${identificadorUnico}`;
-    const email = `usuario.teste.${identificadorUnico}@email.com`;
+    const usuario = gerarUsuarioTeste();
 
     // 1. Iniciar navegador
     // O Playwright já abre o navegador automaticamente ao iniciar o teste.
@@ -26,13 +26,13 @@ test.describe('Automation Exercise - Cadastro de Usuário', () => {
     await expect(page.getByText('New User Signup!')).toBeVisible();
 
     // 6. Informar nome e endereço de email
-    await page.getByPlaceholder('Name').fill(usuario);
+    await page.getByPlaceholder('Name').fill(usuario.nome);
 
     await page
       .locator('form')
       .filter({ hasText: 'Signup' })
       .getByPlaceholder('Email Address')
-      .fill(email);
+      .fill(usuario.email);
 
     // 7. Clicar no botão "Signup"
     await page.getByRole('button', { name: 'Signup' }).click()
@@ -45,7 +45,7 @@ test.describe('Automation Exercise - Cadastro de Usuário', () => {
     await page.getByRole('radio', { name: 'Mr.' }).check()
     //await page.getByRole('radio', {name: 'Mrs.'}).check()
 
-    await page.getByLabel('Password').fill('SenhaTeste@123');
+    await page.getByLabel('Password').fill(usuario.senha);
 
     await page.getByTestId('days').selectOption('28');
     await page.getByTestId('months').selectOption('5');
@@ -59,18 +59,18 @@ test.describe('Automation Exercise - Cadastro de Usuário', () => {
     await page.getByRole('checkbox', { name: 'Receive special offers from our partners!' }).check();
 
     //12. Preencher os dados: primeiro nome, sobrenome, empresa, endereço, complemento, país, estado, cidade, CEP e telefone.
-    await page.getByTestId('first_name').fill('Usuario');
-    await page.getByTestId('last_name').fill('Playwright');
-    await page.getByTestId('company').fill('WebRota');
-    await page.getByTestId('address').fill('Rua de Teste, 123');
-    await page.getByTestId('address2').fill('Complemento QA');
+    await page.getByTestId('first_name').fill(usuario.primeiroNome);
+    await page.getByTestId('last_name').fill(usuario.sobrenome);
+    await page.getByTestId('company').fill(usuario.empresa);
+    await page.getByTestId('address').fill(usuario.endereco);
+    await page.getByTestId('address2').fill(usuario.complemento);
 
-    await page.getByTestId('country').selectOption('Canada');
+    await page.getByTestId('country').selectOption(usuario.pais);
 
-    await page.getByTestId('state').fill('Ontario');
-    await page.getByTestId('city').fill('Toronto');
-    await page.getByTestId('zipcode').fill('12345');
-    await page.getByTestId('mobile_number').fill('11999999999');
+    await page.getByTestId('state').fill(usuario.estado);
+    await page.getByTestId('city').fill(usuario.cidade);
+    await page.getByTestId('zipcode').fill(usuario.cep);
+    await page.getByTestId('mobile_number').fill(usuario.telefone);
 
     //13. Clicar no botão "Create Account"
     await page.getByTestId('create-account').click()
@@ -82,14 +82,10 @@ test.describe('Automation Exercise - Cadastro de Usuário', () => {
     await page.getByTestId('continue-button').click();
 
     //16. Validar que "Logged in as username" está visível
-    await expect(page.getByText(`Logged in as ${usuario}`)).toBeVisible();
+    await expect(page.getByText(`Logged in as ${usuario.nome}`)).toBeVisible();
 
-    //17. Clicar em "Delete Account"
-    await page.getByRole('link', {name: 'Delete Account'}).click();
-
-    //18. Validar que "Account Deleted!" está visível e clicar em "Continue"
-    await expect(page.getByTestId('account-deleted')).toBeVisible();
-    await page.getByTestId('continue-button').click();
+    //17. Deletar usuário criado
+    await deletarUsuario(page);
 
   });
 

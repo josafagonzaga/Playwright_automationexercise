@@ -1,11 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { gerarUsuarioTeste } from './utils/gerar-usuario-teste';
 
 test.describe('Automation Exercise - Login de Usuario', () => {
   test('deve cadastrar usuario e validar login sem excluir a conta', async ({ page }) => {
-    const identificadorUnico = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
-    const usuario = `Usuario Teste ${identificadorUnico}`;
-    const email = `usuario.teste.${identificadorUnico}@email.com`;
-    const senha = 'SenhaTeste@123';
+    const usuario = gerarUsuarioTeste();
 
     // 1. Iniciar navegador
     // O Playwright já abre o navegador automaticamente ao iniciar o teste.
@@ -27,13 +25,13 @@ test.describe('Automation Exercise - Login de Usuario', () => {
     await expect(page.getByText('New User Signup!')).toBeVisible();
 
     // 6. Informar nome e endereço de email
-    await page.getByPlaceholder('Name').fill(usuario);
+    await page.getByPlaceholder('Name').fill(usuario.nome);
 
     await page
       .locator('form')
       .filter({ hasText: 'Signup' })
       .getByPlaceholder('Email Address')
-      .fill(email);
+      .fill(usuario.email);
 
     // 7. Clicar no botão "Signup"
     await page.getByRole('button', { name: 'Signup' }).click();
@@ -46,7 +44,7 @@ test.describe('Automation Exercise - Login de Usuario', () => {
     await page.getByRole('radio', { name: 'Mr.' }).check();
     //await page.getByRole('radio', {name: 'Mrs.'}).check()
 
-    await page.getByLabel('Password').fill(senha);
+    await page.getByLabel('Password').fill(usuario.senha);
 
     await page.getByTestId('days').selectOption('28');
     await page.getByTestId('months').selectOption('5');
@@ -59,18 +57,18 @@ test.describe('Automation Exercise - Login de Usuario', () => {
     await page.getByRole('checkbox', { name: 'Receive special offers from our partners!' }).check();
 
     //12. Preencher os dados: primeiro nome, sobrenome, empresa, endereço, complemento, país, estado, cidade, CEP e telefone.
-    await page.getByTestId('first_name').fill('Usuario');
-    await page.getByTestId('last_name').fill('Playwright');
-    await page.getByTestId('company').fill('WebRota');
-    await page.getByTestId('address').fill('Rua de Teste, 123');
-    await page.getByTestId('address2').fill('Complemento QA');
+    await page.getByTestId('first_name').fill(usuario.primeiroNome);
+    await page.getByTestId('last_name').fill(usuario.sobrenome);
+    await page.getByTestId('company').fill(usuario.empresa);
+    await page.getByTestId('address').fill(usuario.endereco);
+    await page.getByTestId('address2').fill(usuario.complemento);
 
-    await page.getByTestId('country').selectOption('Canada');
+    await page.getByTestId('country').selectOption(usuario.pais);
 
-    await page.getByTestId('state').fill('Ontario');
-    await page.getByTestId('city').fill('Toronto');
-    await page.getByTestId('zipcode').fill('12345');
-    await page.getByTestId('mobile_number').fill('11999999999');
+    await page.getByTestId('state').fill(usuario.estado);
+    await page.getByTestId('city').fill(usuario.cidade);
+    await page.getByTestId('zipcode').fill(usuario.cep);
+    await page.getByTestId('mobile_number').fill(usuario.telefone);
 
     //13. Clicar no botão "Create Account"
     await page.getByTestId('create-account').click();
@@ -82,7 +80,7 @@ test.describe('Automation Exercise - Login de Usuario', () => {
     await page.getByTestId('continue-button').click();
 
     //16. Validar que "Logged in as username" está visível
-    await expect(page.getByText(`Logged in as ${usuario}`)).toBeVisible();
+    await expect(page.getByText(`Logged in as ${usuario.nome}`)).toBeVisible();
 
     //17. Clicar em "Logout" e validar que voltou para a tela de login/cadastro
     await page.getByRole('link', { name: 'Logout' }).click();
@@ -116,9 +114,9 @@ test.describe('Automation Exercise - Login de Usuario', () => {
       .locator('form')
       .filter({ hasText: 'Login' })
       .getByPlaceholder('Email Address')
-      .fill(email);
+      .fill(usuario.email);
 
-    await page.getByPlaceholder('Password').fill(senha);
+    await page.getByPlaceholder('Password').fill(usuario.senha);
 
     // 7. Clicar no botão "Login"
     await page
@@ -128,7 +126,7 @@ test.describe('Automation Exercise - Login de Usuario', () => {
       .click();
 
     // 8. Validar que "Logged in as username" está visível
-    await expect(page.getByText(`Logged in as ${usuario}`)).toBeVisible();
+    await expect(page.getByText(`Logged in as ${usuario.nome}`)).toBeVisible();
 
     // 9. Clicar em "Delete Account"
     await page.getByRole('link', { name: 'Delete Account' }).click();
